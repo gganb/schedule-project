@@ -7,6 +7,8 @@ import com.example.schedule.repository.JdbcTemplateScheduleRepository;
 import com.example.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -24,5 +26,11 @@ public class ScheduleServiceImpl implements ScheduleService{
         Schedule schedule = new Schedule(scheduleRequestDto.getUserName(),scheduleRequestDto.getTask(),scheduleRequestDto.getPassword());
         return scheduleRepository.saveSchedule(schedule);
 
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findAllTasks() {
+        return scheduleRepository.findAllTasks();
+        // List<ScheduleResponseDto> allTasks =
     }
 }
