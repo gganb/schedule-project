@@ -12,9 +12,10 @@ import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 @Repository
 public class JdbcTemplateScheduleRepository implements ScheduleRepository{
@@ -46,6 +47,14 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
 
     }
 
+    @Override
+    public List<ScheduleResponseDto> findAllTasks() {
+        List<ScheduleResponseDto> task = jdbcTemplate.query("select id,username,task,createdAt,updatedAt from schedules", scheduleRowMapper());
+        return task.stream()
+                .sorted(Comparator.comparing(ScheduleResponseDto::getUpdatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
     private RowMapper<ScheduleResponseDto> scheduleRowMapper(){
         return new RowMapper<ScheduleResponseDto>() {
             @Override
@@ -60,5 +69,18 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
             }
         };
     }
-
+//    private RowMapper<ScheduleResponseDto> UpdatedAtScheduleRowMapper(){
+//        return new RowMapper<ScheduleResponseDto>() {
+//            @Override
+//            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                return new ScheduleResponseDto(
+//                        rs.getLong("id"),
+//                        rs.getString("userName"),
+//                        rs.getString("task"),
+//                        rs.getTimestamp("createdAt"),
+//                        rs.getTimestamp("updatedAt")
+//                );
+//            }
+//        };
+//}
 }
