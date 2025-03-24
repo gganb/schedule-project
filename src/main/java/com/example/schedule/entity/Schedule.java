@@ -34,4 +34,11 @@ public class Schedule {
     }
 
 
+    public Schedule(Long id, String userName, String task, Timestamp createdAt, Timestamp updatedAt) {
+        this.id = id;
+        this.userName = userName;
+        this.task = task;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
