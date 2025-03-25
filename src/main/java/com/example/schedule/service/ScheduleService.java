@@ -3,6 +3,8 @@ package com.example.schedule.service;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public interface ScheduleService {
@@ -16,6 +18,8 @@ public interface ScheduleService {
     ScheduleResponseDto updateSchedule(Long id, String userName, String task, String password);
 
     List<ScheduleResponseDto> findNameTasks(String userName);
+
+    List<ScheduleResponseDto> findScheduleByDate (Date updatedAt) ;
 
     ScheduleResponseDto findScheduleByNameAndId(String name, Long id);
 
