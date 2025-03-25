@@ -1,8 +1,8 @@
 # 🗓 schedule-project 
 
-## ✏ 일정 관리 API 명세서
+## ✏ 일정 관리 API 명세서 
 
-<img width="1268" alt="Image" src="https://github.com/user-attachments/assets/e4747523-fcd3-4da8-9d18-448849d08a96"/>   
+<img width="1281" alt="Image" src="https://github.com/user-attachments/assets/b27d0c26-70b4-43dc-afb6-858a4c7ac8d7" />
 
 
 ## ERD
