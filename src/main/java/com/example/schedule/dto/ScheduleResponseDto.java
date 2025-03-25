@@ -2,19 +2,19 @@ package com.example.schedule.dto;
 
 import com.example.schedule.entity.Schedule;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 
 @Getter
 public class ScheduleResponseDto {
     private Long id;    // 글 번호
     private String userName;
     private String task;
-    // 1.한국시간변환
+
+    // 시간 변환 포맷
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -36,6 +36,8 @@ public class ScheduleResponseDto {
         this.createdAt = convertToLocalDateTime(createdAt);
         this.updatedAt = convertToLocalDateTime(updatedAt);
     }
+
+
     private LocalDateTime convertToLocalDateTime(Timestamp timestamp) {
         return timestamp != null ? timestamp.toLocalDateTime() : null;
     }
