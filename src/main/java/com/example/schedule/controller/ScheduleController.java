@@ -43,6 +43,18 @@ public class ScheduleController {
     }
 
     /**
+     * 특정 사용자의 전체 글 조회
+     * @param userName
+     * @return
+     */
+    @GetMapping("/user/{userName}")
+    public List<ScheduleResponseDto> findNameTasks(
+            @PathVariable String userName
+    ){
+        return scheduleService.findNameTasks(userName);
+    }
+
+    /**
      * 일정 단건 조회 API
      * @param {@link id}
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
@@ -53,6 +65,29 @@ public class ScheduleController {
     ){
         return new ResponseEntity<>(scheduleService.findScheduleById(id),HttpStatus.OK);
     }
+@GetMapping("/user/{userName}/{id}")
+
+
+
+    /**
+     *  **선택한 일정 수정**
+     *   선택한 일정 내용 중 `할일`, `작성자명` 만 수정 가능
+     *   서버에 일정 수정을 요청할 때 `비밀번호`를 함께 전달합니다.
+     *   `작성일` 은 변경할 수 없으며, `수정일` 은 수정 완료 시, 수정한 시점으로 변경합니다.
+     */
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto scheduleRequestDto
+    ){
+        return new ResponseEntity<>(scheduleService.updateSchedule(
+                id,
+                scheduleRequestDto.getUserName(),
+                scheduleRequestDto.getTask(),
+                scheduleRequestDto.getPassword()),HttpStatus.OK);
+    }
+
 
 }
 
