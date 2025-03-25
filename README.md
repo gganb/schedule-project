@@ -31,8 +31,30 @@ Spring Boot 기반의 간단한 일정 관리 RESTful API 기반의 일정관리
 
 ## 디렉터리 구조
 ```
-
-
+📦 
+├─ README.md
+└─ src
+   └─ main
+      ├─ java
+      │  └─ com
+      │     └─ example
+      │        └─ schedule
+      │           ├─ controller
+      │           │  └─ ScheduleController.java
+      │           ├─ dto
+      │           │  ├─ ScheduleRequestDto.java
+      │           │  └─ ScheduleResponseDto.java
+      │           ├─ entity
+      │           │  └─ Schedule.java
+      │           ├─ repository
+      │           │  ├─ JdbcTemplateScheduleRepository.java
+      │           │  └─ ScheduleRepository.java
+      │           └─ service
+      │              ├─ ScheduleService.java
+      │              └─ ScheduleServiceImpl.java
+      └─ resources
+         └─ sql
+            └─ schedule.sql
 
 ```
 
@@ -40,7 +62,8 @@ Spring Boot 기반의 간단한 일정 관리 RESTful API 기반의 일정관리
 ## 🗃 데이터베이스 설정
 실행 전에 다음과 같은 테이블을 생성해주세요
 
-```CREATE TABLE schedules (
+```
+CREATE TABLE schedules (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     userName VARCHAR(255),
     task VARCHAR(255),
