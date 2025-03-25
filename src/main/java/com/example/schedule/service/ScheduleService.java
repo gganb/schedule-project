@@ -18,4 +18,6 @@ public interface ScheduleService {
     List<ScheduleResponseDto> findNameTasks(String userName);
 
     ScheduleResponseDto findScheduleByNameAndId(String name, Long id);
+
+    void deleteSchedule (Long id, String password);
 }
