@@ -23,8 +23,8 @@ public class ScheduleController {
     /**
      * 일정 생성 API
      *
-     * @param  {@link scheduleRequestDto} 할 일 생성 요청 객체
-     * @return  {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
+     * @param {@link scheduleRequestDto} 할 일 생성 요청 객체
+     * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
      */
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(
@@ -35,38 +35,53 @@ public class ScheduleController {
 
     /**
      * 일정 전체 조회 API
+     *
      * @return {@link List<ScheduleResponseDto>}  JSON 응답
      */
     @GetMapping
-    public List<ScheduleResponseDto> findAllTasks(){
+    public List<ScheduleResponseDto> findAllTasks() {
         return scheduleService.findAllTasks();
     }
 
     /**
      * 특정 사용자의 전체 글 조회
+     *
      * @param userName
      * @return
      */
     @GetMapping("/user/{userName}")
     public List<ScheduleResponseDto> findNameTasks(
             @PathVariable String userName
-    ){
+    ) {
         return scheduleService.findNameTasks(userName);
     }
 
     /**
      * 일정 단건 조회 API
+     *
      * @param {@link id}
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
      */
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(
             @PathVariable Long id
-    ){
-        return new ResponseEntity<>(scheduleService.findScheduleById(id),HttpStatus.OK);
+    ) {
+        return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
-@GetMapping("/user/{userName}/{id}")
 
+    /**
+     *  특정 사용자의 글 단건 조회
+     * @param userName
+     * @param id
+     * @return
+     */
+    @GetMapping("/user/{userName}/{id}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleByNameAndId(
+            @PathVariable String userName,
+            @PathVariable Long id
+    ){
+        return new ResponseEntity<>(scheduleService.findScheduleByNameAndId(userName,id),HttpStatus.OK);
+    }
 
 
     /**
@@ -80,12 +95,12 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto scheduleRequestDto
-    ){
+    ) {
         return new ResponseEntity<>(scheduleService.updateSchedule(
                 id,
                 scheduleRequestDto.getUserName(),
                 scheduleRequestDto.getTask(),
-                scheduleRequestDto.getPassword()),HttpStatus.OK);
+                scheduleRequestDto.getPassword()), HttpStatus.OK);
     }
 
 
