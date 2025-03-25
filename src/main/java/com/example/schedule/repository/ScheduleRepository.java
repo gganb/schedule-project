@@ -15,5 +15,6 @@ public interface ScheduleRepository {
 
     Schedule findScheduleByIdOrElseThrow(Long id);
 
+    Schedule findScheduleByNameAndIdOrElseThrow(String userName, Long id);
 
 }
