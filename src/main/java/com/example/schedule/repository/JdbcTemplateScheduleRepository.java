@@ -38,29 +38,35 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
 
         // 작성자, 할일 . . 비밀번호 ? 비밀번호와 작성자를 묶으면 ...
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("username",schedule.getUserName());
+        parameters.put("userName",schedule.getUserName());
         parameters.put("task",schedule.getTask());
         parameters.put("password",schedule.getPassword());
 
         // 저장 후 생성된 key 값을 Number 타입으로 반환하는 메서드 -> 공통 타입으로 추상화
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        String sql = "select id, username, task, createdAt, updatedAt from schedules where id = ?";
+        String sql = "select id, userName, task, createdAt, updatedAt from schedules where id = ?";
         return jdbcTemplate.queryForObject(sql,scheduleRowMapper(),key.longValue());
 
     }
 
+    // 모든 작성 글 내림차순 정렬
     @Override
     public List<ScheduleResponseDto> findAllTasks() {
-        List<ScheduleResponseDto> task = jdbcTemplate.query("select id,username,task,createdAt,updatedAt from schedules", scheduleRowMapper());
-        return task.stream()
-                .sorted(Comparator.comparing(ScheduleResponseDto::getUpdatedAt).reversed())
-                .collect(Collectors.toList());
+        List<ScheduleResponseDto> task = jdbcTemplate.query("select id,userName,task,createdAt,updatedAt from schedules order by updatedAt desc ", scheduleRowMapper());
+        return task;
+    }
+
+    // 이름 - 수정일 기준 내림차순 정렬
+    @Override
+    public List<ScheduleResponseDto> findNameTasks(String userName) {
+        return jdbcTemplate.query("select id,userName,task,createdAt,updatedAt from schedules where userName = ? order by updatedAt desc",scheduleRowMapper(),userName);
+
     }
 
 
     @Override
     public Schedule findScheduleByIdOrElseThrow(Long id) {
-        List<Schedule> listSchedules = jdbcTemplate.query("select id, username,task, createdAt, updatedAt from schedules where id = ?", findScheduleRowMapper(), id);
+        List<Schedule> listSchedules = jdbcTemplate.query("select id, userName,task, createdAt, updatedAt from schedules where id = ?", findScheduleRowMapper(), id);
         return listSchedules.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"id가 존재하지 않습니다."+id));
     }
 
