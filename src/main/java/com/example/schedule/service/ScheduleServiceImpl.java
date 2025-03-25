@@ -57,4 +57,17 @@ public class ScheduleServiceImpl implements ScheduleService{
     public List<ScheduleResponseDto> findNameTasks(String userName) {
         return scheduleRepository.findNameTasks(userName);
     }
+
+
+    /**
+     *  특정 사용자의 단건 글 조회
+     * @param name
+     * @param id
+     * @return  {@link ScheduleResponseDto}
+     */
+    @Override
+    public ScheduleResponseDto findScheduleByNameAndId(String name, Long id) {
+        Schedule scheduleName = scheduleRepository.findScheduleByNameAndIdOrElseThrow(name,id);
+        return new ScheduleResponseDto(scheduleName);
+    }
 }
