@@ -41,4 +41,8 @@ public class Schedule {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    public Schedule(String password) {
+        this.password = password;
+    }
 }
