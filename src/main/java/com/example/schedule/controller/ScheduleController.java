@@ -103,6 +103,20 @@ public class ScheduleController {
                 scheduleRequestDto.getPassword()), HttpStatus.OK);
     }
 
+    /**
+     * 선택한 글 삭제 API
+     * @param {@link id}
+     * @param {@link scheduleRequestDto}
+     * @return  void
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto scheduleRequestDto
+    ){
+        scheduleService.deleteSchedule(id,scheduleRequestDto.getPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
 
