@@ -3,6 +3,7 @@ package com.example.schedule.repository;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.entity.Schedule;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,8 @@ public interface ScheduleRepository {
 
     List<ScheduleResponseDto> findNameTasks(String userName);
 
+    List<ScheduleResponseDto> findScheduleByDate (Date updatedAt);
+
     Schedule findScheduleByIdOrElseThrow(Long id);
 
     Schedule findScheduleByNameAndIdOrElseThrow(String userName, Long id);
@@ -20,4 +23,7 @@ public interface ScheduleRepository {
     int deleteSchedule(Long id);
 
     String isEqualPassword(Long id);
+
+    int updateSchedule(Long id, String userName, String task);
+
 }
