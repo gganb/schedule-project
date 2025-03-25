@@ -1,7 +1,7 @@
 package com.example.schedule.entity;
 
 
-import com.example.schedule.service.ScheduleService;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,11 +10,10 @@ import java.sql.Timestamp;
 
 @Getter
 @AllArgsConstructor
-// id, 이름, 할일, 비번, 작성일, 수정일
 public class Schedule {
 
+    // id, 이름, 할일, 비밀번호, 작성일, 수정일
     private Long id;
-    //  private Long userId;    // 외래키
     private String userName;
     private String password;
     private String task;
@@ -23,9 +22,6 @@ public class Schedule {
 
     /**
      * 글 작성을 위한 생성자
-     * @param userName
-     * @param password
-     * @param task
      */
     public Schedule(String userName, String task, String password){
         this.userName = userName;
@@ -33,7 +29,9 @@ public class Schedule {
         this.password = password;
     }
 
-
+    /**
+     * DB 조회
+     */
     public Schedule(Long id, String userName, String task, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.userName = userName;
@@ -42,7 +40,4 @@ public class Schedule {
         this.updatedAt = updatedAt;
     }
 
-    public Schedule(String password) {
-        this.password = password;
-    }
 }

@@ -10,35 +10,38 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ScheduleResponseDto {
-    private Long id;    // 글 번호
+
+    private Long id;
     private String userName;
     private String task;
 
     // 시간 변환 포맷
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
+    // Entity -> DTO
     public ScheduleResponseDto(Schedule schedule){
         this.id = schedule.getId();
         this.userName = schedule.getUserName();
         this.task = schedule.getTask();
-        this.createdAt = convertToLocalDateTime(schedule.getCreatedAt());
-        this.updatedAt = convertToLocalDateTime(schedule.getUpdatedAt());
-
+        this.createdAt = toLocalDateTime(schedule.getCreatedAt());
+        this.updatedAt = toLocalDateTime(schedule.getUpdatedAt());
     }
 
+    // 필드로 초기화
     public ScheduleResponseDto(Long id, String userName, String task, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.userName = userName;
         this.task = task;
-        this.createdAt = convertToLocalDateTime(createdAt);
-        this.updatedAt = convertToLocalDateTime(updatedAt);
+        this.createdAt = toLocalDateTime(createdAt);
+        this.updatedAt = toLocalDateTime(updatedAt);
     }
 
 
-    private LocalDateTime convertToLocalDateTime(Timestamp timestamp) {
+    private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp != null ? timestamp.toLocalDateTime() : null;
     }
 

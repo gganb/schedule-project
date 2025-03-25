@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ScheduleController {
     }
 
     /**
-     * 일정 생성 API
+     * 일정 생성
      *
      * @param {@link scheduleRequestDto} 할 일 생성 요청 객체
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
@@ -37,9 +37,7 @@ public class ScheduleController {
     }
 
     /**
-     * 일정 전체 조회 API
-     *
-     * @return {@link List<ScheduleResponseDto>}  JSON 응답
+     * 전체 일정 조회
      */
     @GetMapping
     public List<ScheduleResponseDto> findAllTasks() {
@@ -47,10 +45,9 @@ public class ScheduleController {
     }
 
     /**
-     * 특정 사용자의 전체 글 조회
+     * 사용자 이름으로 일정 목록 조회
      *
      * @param userName
-     * @return
      */
     @GetMapping("/user/{userName}")
     public List<ScheduleResponseDto> findNameTasks(
@@ -60,12 +57,12 @@ public class ScheduleController {
     }
 
     /**
-     * 일정 단건 조회 API
+     * id로 일정 단건 조회 API
      *
      * @param {@link id}
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
      */
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(
             @PathVariable Long id
     ) {
@@ -73,19 +70,21 @@ public class ScheduleController {
     }
 
     /**
-     *  특정 사용자의 글 단건 조회
-     * @param userName
-     * @param id
-     * @return
+     * 사용자 이름 + ID로 일정 단건 조회
+     * 예: /api/schedule/user?userName=name&id=1
      */
-    @GetMapping("/user/{userName}/{id}")
+    @GetMapping("/user")
     public ResponseEntity<ScheduleResponseDto> findScheduleByNameAndId(
-            @PathVariable String userName,
-            @PathVariable Long id
-    ){
-        return new ResponseEntity<>(scheduleService.findScheduleByNameAndId(userName,id),HttpStatus.OK);
+            @RequestParam String userName,
+            @RequestParam Long id
+    ) {
+        return new ResponseEntity<>(scheduleService.findScheduleByNameAndId(userName, id), HttpStatus.OK);
     }
 
+    /**
+     * 날짜 기준 일정 조회
+     * 예: /api/schedule/date?updatedAt=2025-03-25
+     */
     @GetMapping("/date")
     public List<ScheduleResponseDto> findScheduleByDate(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date updatedAt
@@ -94,37 +93,31 @@ public class ScheduleController {
     }
 
     /**
-     *  **선택한 일정 수정**
-     *   선택한 일정 내용 중 `할일`, `작성자명` 만 수정 가능
-     *   서버에 일정 수정을 요청할 때 `비밀번호`를 함께 전달합니다.
-     *   `작성일` 은 변경할 수 없으며, `수정일` 은 수정 완료 시, 수정한 시점으로 변경합니다.
+     * 일정 수정 (이름, 할 일 수정 가능 / 비밀번호 확인 필요)
      */
 
-    @PatchMapping("/id/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto scheduleRequestDto
     ) {
         return new ResponseEntity<>(scheduleService.updateSchedule(
                 id,
-                scheduleRequestDto.getUserName(),   // 작성자명
-                scheduleRequestDto.getTask(),   // 할 일
-                scheduleRequestDto.getPassword()),  // 비밀번호
+                scheduleRequestDto.getUserName(),
+                scheduleRequestDto.getTask(),
+                scheduleRequestDto.getPassword()),
                 HttpStatus.OK);
     }
 
     /**
-     * 선택한 글 삭제 API
-     * @param {@link id}
-     * @param {@link scheduleRequestDto}
-     * @return  void
+     * 일정 삭제 (비밀번호 확인 필요)
      */
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto scheduleRequestDto
-    ){
-        scheduleService.deleteSchedule(id,scheduleRequestDto.getPassword());
+    ) {
+        scheduleService.deleteSchedule(id, scheduleRequestDto.getPassword());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
