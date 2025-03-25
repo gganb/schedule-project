@@ -58,6 +58,16 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     }
 
+    @Override
+    public List<ScheduleResponseDto> findScheduleByDate(Date updatedAt) {
+        return jdbcTemplate.query("select id, userName,task, createdAt, updatedAt from schedules where DATE(updatedAt) = ? ",scheduleRowMapper(),updatedAt);
+    }
+
+//    @Override
+//    public List<ScheduleResponseDto> findScheduleByDate(Date updatedAt) {
+//        return jdbcTemplate.query("select id, userName,task, createdAt, updatedAt from schedules where date(updatedAt) = ? ",scheduleRowMapper(),updatedAt);
+//    }
+
 
     // id 로 특정 글 검색
     @Override
@@ -74,17 +84,23 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     }
 
-
+    // 해당 글 삭제
     @Override
     public int deleteSchedule(Long id) {
         return jdbcTemplate.update("delete from schedules where id = ? ", id);
     }
 
+    // 비밀번호 검증
     @Override
     public String isEqualPassword(Long id) {
         Schedule schedulePassword = jdbcTemplate.queryForObject("select password from schedules where id= ?", findPassword(), id);
         assert schedulePassword != null;
         return schedulePassword.getPassword();
+    }
+
+    @Override
+    public int updateSchedule(Long id, String userName, String task) {
+        return jdbcTemplate.update("update schedules set userName = ? , task = ? where id = ?", userName, task, id);
     }
 
     /**
