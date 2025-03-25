@@ -10,3 +10,7 @@ create table schedules (
 
 );
 SHOW CREATE TABLE schedules;
+
+TRUNCATE TABLE schedules;
+
+ALTER TABLE schedules CHANGE username userName VARCHAR(50);
