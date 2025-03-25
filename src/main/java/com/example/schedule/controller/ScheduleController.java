@@ -4,10 +4,13 @@ package com.example.schedule.controller;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.service.ScheduleService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,7 +65,7 @@ public class ScheduleController {
      * @param {@link id}
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
      */
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(
             @PathVariable Long id
     ) {
@@ -83,6 +86,12 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleByNameAndId(userName,id),HttpStatus.OK);
     }
 
+    @GetMapping("/date")
+    public List<ScheduleResponseDto> findScheduleByDate(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date updatedAt
+    ) {
+        return scheduleService.findScheduleByDate(updatedAt);
+    }
 
     /**
      *  **선택한 일정 수정**
@@ -91,16 +100,17 @@ public class ScheduleController {
      *   `작성일` 은 변경할 수 없으며, `수정일` 은 수정 완료 시, 수정한 시점으로 변경합니다.
      */
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/id/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto scheduleRequestDto
     ) {
         return new ResponseEntity<>(scheduleService.updateSchedule(
                 id,
-                scheduleRequestDto.getUserName(),
-                scheduleRequestDto.getTask(),
-                scheduleRequestDto.getPassword()), HttpStatus.OK);
+                scheduleRequestDto.getUserName(),   // 작성자명
+                scheduleRequestDto.getTask(),   // 할 일
+                scheduleRequestDto.getPassword()),  // 비밀번호
+                HttpStatus.OK);
     }
 
     /**
@@ -109,7 +119,7 @@ public class ScheduleController {
      * @param {@link scheduleRequestDto}
      * @return  void
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto scheduleRequestDto
