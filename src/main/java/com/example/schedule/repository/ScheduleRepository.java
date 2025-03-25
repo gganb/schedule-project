@@ -11,5 +11,9 @@ public interface ScheduleRepository {
 
     List<ScheduleResponseDto> findAllTasks();
 
+    List<ScheduleResponseDto> findNameTasks(String userName);
+
     Schedule findScheduleByIdOrElseThrow(Long id);
+
+
 }
