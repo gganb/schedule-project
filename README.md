@@ -65,9 +65,9 @@ Spring Boot 기반의 간단한 일정 관리 RESTful API 기반의 일정관리
 ```
 CREATE TABLE schedules (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    userName VARCHAR(255),
-    task VARCHAR(255),
-    password VARCHAR(255),
+    userName VARCHAR(50),
+    task text,
+    password VARCHAR(60),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
