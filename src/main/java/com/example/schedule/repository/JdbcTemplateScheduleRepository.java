@@ -74,6 +74,19 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     }
 
+
+    @Override
+    public int deleteSchedule(Long id) {
+        return jdbcTemplate.update("delete from schedules where id = ? ", id);
+    }
+
+    @Override
+    public String isEqualPassword(Long id) {
+        Schedule schedulePassword = jdbcTemplate.queryForObject("select password from schedules where id= ?", findPassword(), id);
+        assert schedulePassword != null;
+        return schedulePassword.getPassword();
+    }
+
     /**
      * @return {@link RowMapper<ScheduleResponseDto>}
      */
@@ -105,6 +118,17 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
                         rs.getString("task"),
                         rs.getTimestamp("createdAt"),
                         rs.getTimestamp("updatedAt")
+                );
+            }
+        };
+    }
+
+    private RowMapper<Schedule> findPassword() {
+        return new RowMapper<Schedule>() {
+            @Override
+            public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Schedule(
+                        rs.getString("password")
                 );
             }
         };
