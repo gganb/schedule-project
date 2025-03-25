@@ -6,13 +6,16 @@ import com.example.schedule.dto.ScheduleResponseDto;
 import java.util.List;
 
 public interface ScheduleService {
+
     ScheduleResponseDto saveSchedule(ScheduleRequestDto scheduleRequestDto);
 
     List<ScheduleResponseDto> findAllTasks();
 
     ScheduleResponseDto findScheduleById(Long id);
 
-    ScheduleResponseDto updateSchedule(Long id, String userName, String task,String password);
+    ScheduleResponseDto updateSchedule(Long id, String userName, String task, String password);
 
     List<ScheduleResponseDto> findNameTasks(String userName);
+
+    ScheduleResponseDto findScheduleByNameAndId(String name, Long id);
 }
