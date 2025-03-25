@@ -17,4 +17,7 @@ public interface ScheduleRepository {
 
     Schedule findScheduleByNameAndIdOrElseThrow(String userName, Long id);
 
+    int deleteSchedule(Long id);
+
+    String isEqualPassword(Long id);
 }
