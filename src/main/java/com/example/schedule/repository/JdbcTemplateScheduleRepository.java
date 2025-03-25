@@ -11,16 +11,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 
 @Repository
-public class JdbcTemplateScheduleRepository implements ScheduleRepository{
+public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,20 +29,18 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
 
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        // usingColumns
-        //
-        jdbcInsert.withTableName("schedules").usingColumns("username","task","password").usingGeneratedKeyColumns("id");
+        jdbcInsert.withTableName("schedules").usingColumns("username", "task", "password").usingGeneratedKeyColumns("id");
 
         // 작성자, 할일 . . 비밀번호 ? 비밀번호와 작성자를 묶으면 ...
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("userName",schedule.getUserName());
-        parameters.put("task",schedule.getTask());
-        parameters.put("password",schedule.getPassword());
+        parameters.put("userName", schedule.getUserName());
+        parameters.put("task", schedule.getTask());
+        parameters.put("password", schedule.getPassword());
 
         // 저장 후 생성된 key 값을 Number 타입으로 반환하는 메서드 -> 공통 타입으로 추상화
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         String sql = "select id, userName, task, createdAt, updatedAt from schedules where id = ?";
-        return jdbcTemplate.queryForObject(sql,scheduleRowMapper(),key.longValue());
+        return jdbcTemplate.queryForObject(sql, scheduleRowMapper(), key.longValue());
 
     }
 
@@ -59,21 +54,30 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
     // 이름 - 수정일 기준 내림차순 정렬
     @Override
     public List<ScheduleResponseDto> findNameTasks(String userName) {
-        return jdbcTemplate.query("select id,userName,task,createdAt,updatedAt from schedules where userName = ? order by updatedAt desc",scheduleRowMapper(),userName);
+        return jdbcTemplate.query("select id,userName,task,createdAt,updatedAt from schedules where userName = ? order by updatedAt desc", scheduleRowMapper(), userName);
 
     }
 
 
+    // id 로 특정 글 검색
     @Override
     public Schedule findScheduleByIdOrElseThrow(Long id) {
         List<Schedule> listSchedules = jdbcTemplate.query("select id, userName,task, createdAt, updatedAt from schedules where id = ?", findScheduleRowMapper(), id);
-        return listSchedules.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"id가 존재하지 않습니다."+id));
+        return listSchedules.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "id가 존재하지 않습니다." + id));
     }
 
+    // 특정 userName의 id로 글 검색
+    @Override
+    public Schedule findScheduleByNameAndIdOrElseThrow(String userName, Long id) {
+        List<Schedule> listScheduleName = jdbcTemplate.query("select id, userName,task, createdAt, updatedAt from schedules where userName = ? and id = ?", findScheduleRowMapper(), userName, id);
+        return listScheduleName.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 userName에 맞는 id는 존재하지 않습니다." + userName + id));
 
+    }
 
-
-    private RowMapper<ScheduleResponseDto> scheduleRowMapper(){
+    /**
+     * @return {@link RowMapper<ScheduleResponseDto>}
+     */
+    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
             @Override
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -87,7 +91,11 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
             }
         };
     }
-    private RowMapper<Schedule> findScheduleRowMapper(){
+
+    /**
+     * @return {@link RowMapper<Schedule>}
+     */
+    private RowMapper<Schedule> findScheduleRowMapper() {
         return new RowMapper<Schedule>() {
             @Override
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -100,5 +108,5 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository{
                 );
             }
         };
-}
+    }
 }
